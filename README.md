@@ -5,6 +5,8 @@
 CloudSlang Content Generator
 ============================
 
+[![Join the chat at https://gitter.im/CloudSlang/cs-content-generator](https://badges.gitter.im/CloudSlang/cs-content-generator.svg)](https://gitter.im/CloudSlang/cs-content-generator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/CloudSlang/cs-content-generator.svg?branch=master)](https://travis-ci.org/CloudSlang/cs-content-generator)
 
 
