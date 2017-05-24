@@ -1,4 +1,4 @@
-package io.cloudslang.tools.generator.entities.cs;
+package io.cloudslang.tools.generator.entities;
 
 import org.apache.commons.lang3.StringUtils;
 

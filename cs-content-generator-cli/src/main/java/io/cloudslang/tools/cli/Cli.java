@@ -22,8 +22,8 @@ public class Cli {
         this.args = args;
         options = new Options();
         options.addOption("h", "help", false, "Help");
-        options.addOption("s", "source", true, "The source file/folder where the XMLs are");
-        options.addOption("d", "destination", true, "Where should the X -> Y");
+        options.addOption("s", "source", true, "The source file/folder of the Actions that will be converted.");
+        options.addOption("d", "destination", true, "Absolute path to the location where the .sl files will be created.");
     }
 
     public boolean parse() {
@@ -58,7 +58,7 @@ public class Cli {
 
     private void help() {
         final HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("Main", options);
+        formatter.printHelp("MainGenerator", options);
         System.exit(0);
     }
 }

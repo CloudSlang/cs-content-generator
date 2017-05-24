@@ -4,7 +4,12 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import io.cloudslang.tools.generator.entities.cs.*;
+import io.cloudslang.tools.generator.entities.CsInput;
+import io.cloudslang.tools.generator.entities.CsJavaAction;
+import io.cloudslang.tools.generator.entities.CsOperation;
+import io.cloudslang.tools.generator.entities.CsOperationFile;
+import io.cloudslang.tools.generator.entities.CsOutput;
+import io.cloudslang.tools.generator.entities.CsResponse;
 import io.cloudslang.tools.generator.services.converters.ResultExpressionConverterService;
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -130,7 +135,7 @@ public class OperationService {
 
                     final int indent = isInput.toString().length() - 2;
 
-                    isInput.append("Generated description");
+                    isInput.append("Generated description.");
 
                     if (!csInput.isRequired()) {
                         isInput.append(lineSeparator())
@@ -143,11 +148,11 @@ public class OperationService {
                 .collect(Collectors.joining(lineSeparator()));
 
         final String outputsDescription = operation.getOutputs().stream()
-                .map(csOutput -> String.format("#! @output %s: Generated description", csOutput.getName()))
+                .map(csOutput -> String.format("#! @output %s: Generated description.", csOutput.getName()))
                 .collect(Collectors.joining(lineSeparator()));
 
         final String responsesDescription = operation.getResults().stream()
-                .map(csResponse -> String.format("#! @result %s: Generated description", csResponse.getName()))
+                .map(csResponse -> String.format("#! @result %s: Generated description.", csResponse.getName()))
                 .collect(Collectors.joining(lineSeparator()));
 
         return new StringBuilder(inputsDescription)

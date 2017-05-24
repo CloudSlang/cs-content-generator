@@ -1,4 +1,4 @@
-package io.cloudslang.tools.generator.services.fs;
+package io.cloudslang.tools.generator.services;
 
 import io.cloudslang.tools.generator.utils.PackageUtils;
 import org.apache.commons.io.FileUtils;

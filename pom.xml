@@ -14,20 +14,6 @@
     </modules>
 
     <properties>
-        <jdk.version>1.8</jdk.version>
-        <spring.version>4.3.2.RELEASE</spring.version>
-        <sdk.version>10.51.1</sdk.version>
-        <dom4j.version>1.6.1</dom4j.version>
-        <slf4j.version>1.7.25</slf4j.version>
-        <jaxen.version>1.1.6</jaxen.version>
-        <maven-model-builder.version>3.2.1</maven-model-builder.version>
-        <javapoet.version>1.3.0</javapoet.version>
-        <commons-io.version>2.4</commons-io.version>
-        <commons-cli.version>1.3.1</commons-cli.version>
-        <javassist.version>3.12.1.GA</javassist.version>
-        <junit.version>4.12</junit.version>
-        <mockito.version>1.9.5</mockito.version>
-        <jimfs.version>1.1</jimfs.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -39,31 +25,14 @@
             <version>1.18</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.hp.score.sdk</groupId>
             <artifactId>score-content-sdk</artifactId>
             <version>1.10.6</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model-builder</artifactId>
-            <version>${maven-model-builder.version}</version>
+            <version>3.2.1</version>
         </dependency>
         <dependency>
             <groupId>com.esotericsoftware.yamlbeans</groupId>
@@ -73,7 +42,7 @@
         <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
-            <version>${dom4j.version}</version>
+            <version>1.6.1</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -89,7 +58,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.19</version>
+            <version>1.7.25</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -117,42 +86,22 @@
             <artifactId>handlebars</artifactId>
             <version>4.0.6</version>
         </dependency>
-
-
-        <!--to use SLF4J with Spring you need to replace the commons-logging dependency within Spring with the SLF4J-JCL bridge-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <version>${slf4j.version}</version>
             <scope>runtime</scope>
         </dependency>
-
         <dependency>
             <groupId>javassist</groupId>
             <artifactId>javassist</artifactId>
-            <version>${javassist.version}</version>
+            <version>3.12.1.GA</version>
         </dependency>
-
-        <!--testing dependencies-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
             <version>4.12</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <scope>test</scope>
-            <version>1.9.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.marschall</groupId>
-            <artifactId>memoryfilesystem</artifactId>
-            <scope>test</scope>
-            <version>0.8.0</version>
         </dependency>
     </dependencies>
     </dependencyManagement>
@@ -175,4 +124,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

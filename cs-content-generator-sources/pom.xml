@@ -12,16 +12,15 @@
     <artifactId>cs-content-generator-sources</artifactId>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.hp.score.sdk</groupId>
+            <artifactId>score-content-sdk</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>15.0</version>
-        </dependency>
-
-        <!-- Score SDK dependency-->
-        <dependency>
-            <groupId>com.hp.score.sdk</groupId>
-            <artifactId>score-content-sdk</artifactId>
         </dependency>
         <dependency>
             <groupId>org.yaml</groupId>
@@ -33,11 +32,6 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.esotericsoftware.yamlbeans</groupId>
-            <artifactId>yamlbeans</artifactId>
-            <version>1.08</version>
-        </dependency>
-        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
@@ -45,7 +39,6 @@
             <groupId>com.github.jknack</groupId>
             <artifactId>handlebars</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
@@ -67,42 +60,14 @@
             <artifactId>javaparser-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.thoughtworks.xstream</groupId>
-            <artifactId>xstream</artifactId>
-        </dependency>
-
-        <!--to use SLF4J with Spring you need to replace the commons-logging dependency within Spring with the SLF4J-JCL bridge-->
-        <!--<dependency>-->
-            <!--<groupId>org.slf4j</groupId>-->
-            <!--<artifactId>jcl-over-slf4j</artifactId>-->
-            <!--<scope>runtime</scope>-->
-        <!--</dependency>-->
-
-        <dependency>
             <groupId>javassist</groupId>
             <artifactId>javassist</artifactId>
         </dependency>
-
-        <!--testing dependencies-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
             <version>4.12</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.marschall</groupId>
-            <artifactId>memoryfilesystem</artifactId>
-            <version>0.8.0</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

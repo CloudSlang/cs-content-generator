@@ -1,4 +1,4 @@
-package io.cloudslang.tools.generator.entities.cs;
+package io.cloudslang.tools.generator.entities;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,7 +20,6 @@ public class CsResponse implements Mappable{
         csResponseMap.put("name", name);
         csResponseMap.put("hasValue", StringUtils.isNoneEmpty(rule));
         csResponseMap.put("value", rule);
-//        csResponseMap.put("value", rule);
         return csResponseMap;
     }
 

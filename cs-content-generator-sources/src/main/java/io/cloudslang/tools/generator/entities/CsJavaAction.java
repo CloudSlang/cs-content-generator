@@ -1,4 +1,4 @@
-package io.cloudslang.tools.generator.entities.cs;
+package io.cloudslang.tools.generator.entities;
 
 import java.util.HashMap;
 import java.util.Map;
