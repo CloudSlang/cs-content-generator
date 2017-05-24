@@ -26,9 +26,4 @@ public class CsResponse implements Mappable{
     public String getName() {
         return name;
     }
-
-    public String getRule() {
-        return rule;
-    }
-
 }

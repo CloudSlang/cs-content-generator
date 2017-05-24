@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CsInput implements Mappable{
+public class CsInput implements Mappable {
 
     private final String name;
     private final boolean required;
@@ -22,7 +22,7 @@ public class CsInput implements Mappable{
     }
 
     public Map<String, Object> toMap() {
-        boolean hasDefault =  StringUtils.isNotEmpty(defaultValue);
+        boolean hasDefault = StringUtils.isNotEmpty(defaultValue);
         final Map<String, Object> csInputMap = new HashMap<>();
         csInputMap.put("name", name);
         csInputMap.put("default", defaultValue);
@@ -38,19 +38,12 @@ public class CsInput implements Mappable{
     public String getName() {
         return name;
     }
-
-
     public boolean isRequired() {
         return required;
     }
-
-
-
-
     public boolean isPrivateField() {
         return privateField;
     }
-
 
 
 }

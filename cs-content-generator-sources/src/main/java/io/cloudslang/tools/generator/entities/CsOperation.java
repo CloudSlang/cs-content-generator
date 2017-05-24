@@ -27,9 +27,6 @@ public class CsOperation implements Mappable {
     public List<CsInput> getInputs() {
         return inputs;
     }
-    public CsJavaAction getAction() {
-        return action;
-    }
     public List<CsOutput> getOutputs() {
         return outputs;
     }

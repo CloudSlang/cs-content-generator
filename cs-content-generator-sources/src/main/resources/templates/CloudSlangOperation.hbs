@@ -13,7 +13,7 @@ operation: {{#with operation}}
   {{#if hasInputs}}
   inputs: {{#each inputs}}
     - {{name}}{{#if hasAny}}:{{/if}} {{#if hasDefault}}
-        default: '{{{default}}}' {{/if}} {{#unless isRequired}}
+        default: {{{default}}} {{/if}} {{#unless isRequired}}
         required: {{isRequired}}{{/unless}} {{#if isPrivate}}
         private: {{isPrivate}}{{/if}} {{#if isSensitive}}
         sensitive: {{isSensitive}}{{/if}}{{/each}}

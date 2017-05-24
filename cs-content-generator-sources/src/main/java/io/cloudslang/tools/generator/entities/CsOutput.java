@@ -26,8 +26,4 @@ public class CsOutput  implements Mappable{
     public String getName() {
         return name;
     }
-
-    public String getExpression() {
-        return expression;
-    }
 }
