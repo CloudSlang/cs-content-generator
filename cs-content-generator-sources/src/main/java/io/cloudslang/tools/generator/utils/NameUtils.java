@@ -4,12 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.Assert;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * Author: Ligia Centea
- * Date: 3/18/2016.
- */
 public class NameUtils {
 
     private static final String CAMEL_SPLIT_REGEX = "(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])" +
@@ -29,8 +25,7 @@ public class NameUtils {
         }
     }
 
-    public static String getPackage(String first, String... more) {
-        Assert.notNull(first);
+    public static String getPackage(@NotNull String first, String... more) {
         StringBuilder packageName = new StringBuilder(first);
 
         for (String element : more) {
@@ -43,23 +38,20 @@ public class NameUtils {
         return packageName.toString();
     }
 
-    public static String getActionName(String value) {
-        Assert.notNull(value);
+    public static String getActionName(@NotNull String value) {
         // TODO see if pattern can be used
         return Arrays.stream(value.split(CAMEL_SPLIT_REGEX))
                 .collect(Collectors.joining(" "));
     }
 
-    public static String toSnakeCase(String value) {
-        Assert.notNull(value);
+    public static String toSnakeCase(@NotNull String value) {
         // TODO see if pattern can be used
         return Arrays.stream(value.split(CAMEL_SPLIT_REGEX))
                 .map(StringUtils::lowerCase)
                 .collect(Collectors.joining("_"));
     }
 
-    public static String getResultName(String value) {
-        Assert.notNull(value);
+    public static String getResultName(@NotNull String value) {
         String result = StringUtils.replace(value, " ", "_");
         if (RESERVED_WORDS.contains(result.toLowerCase())) {
             result += RESULT_SUFFIX;

@@ -1,35 +1,35 @@
 package io.cloudslang.tools.generator.entities.cs;
 
-/**
- * Author: Ligia Centea
- * Date: 4/3/2016.
- */
-public class CsResponse {
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class CsResponse implements Mappable{
 
     private String name;
     private String rule;
 
     public CsResponse(String name, String rule) {
         this.name = name;
-        this.rule = rule;
+        this.rule = StringUtils.defaultIfEmpty(rule, "");
     }
 
-    public CsResponse() {
+    public Map<String, Object> toMap() {
+        final Map<String, Object> csResponseMap = new HashMap<>();
+        csResponseMap.put("name", name);
+        csResponseMap.put("hasValue", StringUtils.isNoneEmpty(rule));
+        csResponseMap.put("value", rule);
+//        csResponseMap.put("value", rule);
+        return csResponseMap;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getRule() {
         return rule;
     }
 
-    public void setRule(String rule) {
-        this.rule = rule;
-    }
 }

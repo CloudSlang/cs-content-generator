@@ -1,39 +1,33 @@
 package io.cloudslang.tools.generator.entities.cs;
 
-/**
- * Author: Ligia Centea
- * Date: 4/3/2016.
- */
-public class CsOutput {
+import org.apache.commons.lang3.StringUtils;
 
-    private String name;
-    private String expression;
+import java.util.HashMap;
+import java.util.Map;
 
-    public CsOutput() {
-    }
+public class CsOutput  implements Mappable{
+
+    private final String name;
+    private final String expression;
 
     public CsOutput(String name, String expression) {
         this.name = name;
-        this.expression = expression;
+        this.expression = StringUtils.defaultIfEmpty(expression, "");
     }
 
-    public CsOutput(String name) {
-        this.name = name;
+    public Map<String, Object> toMap() {
+        final Map<String, Object> csOutputMap = new HashMap<>(3);
+        csOutputMap.put("name", name);
+        csOutputMap.put("hasValue", StringUtils.isNoneEmpty(expression));
+        csOutputMap.put("value", expression);
+        return csOutputMap;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getExpression() {
         return expression;
-    }
-
-    public void setExpression(String expression) {
-        this.expression = expression;
     }
 }

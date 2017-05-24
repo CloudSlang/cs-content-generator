@@ -1,23 +1,13 @@
 package io.cloudslang.tools.generator.entities.cs;
 
-import io.cloudslang.tools.generator.entities.annotations.Property;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * Author: Ligia Centea
- * Date: 4/3/2016.
- */
-public class CsJavaAction {
+public class CsJavaAction implements Mappable {
 
-    private String gav;
-
-    @Property(key = "class_name")
-    private String methodName;
-
-    @Property(key = "method_name")
-    private String className;
-
-    public CsJavaAction() {
-    }
+    private final String gav;
+    private final String methodName;
+    private final String className;
 
     public CsJavaAction(String gav, String methodName, String className) {
         this.gav = gav;
@@ -25,27 +15,11 @@ public class CsJavaAction {
         this.methodName = className;
     }
 
-    public String getMethodName() {
-        return methodName;
-    }
-
-    public void setMethodName(String methodName) {
-        this.methodName = methodName;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    public String getGav() {
-        return gav;
-    }
-
-    public void setGav(String gav) {
-        this.gav = gav;
+    public Map<String, Object> toMap() {
+        final Map<String, Object> javaActionMap = new HashMap<>();
+        javaActionMap.put("gav", gav);
+        javaActionMap.put("class_name", className);
+        javaActionMap.put("method_name", methodName);
+        return javaActionMap;
     }
 }

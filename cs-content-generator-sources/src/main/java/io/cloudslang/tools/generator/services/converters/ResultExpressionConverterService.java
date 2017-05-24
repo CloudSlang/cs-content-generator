@@ -1,19 +1,17 @@
 package io.cloudslang.tools.generator.services.converters;
 
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import org.springframework.stereotype.Service;
 
 /**
  * Author: Ligia Centea
  * Date: 4/26/2016.
  */
-@Service
 public class ResultExpressionConverterService {
 
     private static final String ARGUMENT = "%s";
     private static final String QUOTED_ARGUMENT = "\'%s\'";
 
-    public String getMatchingExpression(MatchType matchType) {
+    public static String getMatchingExpression(MatchType matchType) {
         switch (matchType) {
 
             //compare arguments

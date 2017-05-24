@@ -1,77 +1,56 @@
 package io.cloudslang.tools.generator.entities.cs;
 
-import io.cloudslang.tools.generator.entities.annotations.Ignore;
-import io.cloudslang.tools.generator.entities.annotations.Property;
+import org.apache.commons.lang3.StringUtils;
 
-/**
- * Author: Ligia Centea
- * Date: 4/3/2016.
- */
-public class CsInput {
+import java.util.HashMap;
+import java.util.Map;
 
-    @Ignore
-    private String name;
+public class CsInput implements Mappable{
 
-    private boolean required;
-
-    @Property(key = "default")
-    private String defaultValue;
-
-    @Property(key = "private")
-    private boolean privateField;
-
-    @Property(key = "sensitive")
-    private boolean sensitive;
+    private final String name;
+    private final boolean required;
+    private final String defaultValue;
+    private final boolean privateField;
+    private final boolean sensitive;
 
     public CsInput(String name, boolean required, String defaultValue, boolean sensitive, boolean overridable) {
         this.name = name;
         this.required = required;
-        this.defaultValue = defaultValue;
-        this.privateField = overridable;
+        this.defaultValue = StringUtils.defaultIfEmpty(defaultValue, "");
         this.sensitive = sensitive;
+        this.privateField = overridable;
     }
 
-    public CsInput(String name, boolean required) {
-        this(name, required, null, false, false);
+    public Map<String, Object> toMap() {
+        boolean hasDefault =  StringUtils.isNotEmpty(defaultValue);
+        final Map<String, Object> csInputMap = new HashMap<>();
+        csInputMap.put("name", name);
+        csInputMap.put("default", defaultValue);
+        csInputMap.put("hasAny", hasDefault || !required || sensitive);
+        csInputMap.put("hasDefault", hasDefault);
+        csInputMap.put("isRequired", required);
+        csInputMap.put("isPrivate", privateField);
+        csInputMap.put("isSensitive", sensitive);
+        return csInputMap;
+
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public boolean isRequired() {
         return required;
     }
 
-    public void setRequired(boolean required) {
-        this.required = required;
-    }
 
-    public String getDefaultValue() {
-        return defaultValue;
-    }
 
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
 
     public boolean isPrivateField() {
         return privateField;
     }
 
-    public void setPrivateField(boolean privateField) {
-        this.privateField = privateField;
-    }
 
-    public boolean isSensitive() {
-        return sensitive;
-    }
 
-    public void setSensitive(boolean sensitive) {
-        this.sensitive = sensitive;
-    }
 }
