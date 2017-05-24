@@ -9,6 +9,7 @@ import io.cloudslang.tools.generator.services.converters.ResultExpressionConvert
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,27 +17,28 @@ import javax.management.BadAttributeValueExpException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static io.cloudslang.tools.generator.utils.NameUtils.getResultName;
 import static io.cloudslang.tools.generator.utils.NameUtils.toSnakeCase;
 import static java.lang.System.lineSeparator;
 
+@Slf4j
 public class OperationService {
 
     private static final List<String> SESSION_OBJECTS = Arrays.asList("GlobalSessionObject", "SerializableSessionObject");
 
-
     public static CsOperationFile getOperation(String gav, @NotNull CtClass javaClass) throws ClassNotFoundException, NotFoundException, BadAttributeValueExpException {
-        CtMethod actionMethod = getActionMethod(javaClass);
-        if (actionMethod != null) {
-            Action action = (Action) actionMethod.getAnnotation(Action.class);
-            final List<CsInput> inputs = getInputs(actionMethod);
+        Optional<CtMethod> actionMethodOpt = getActionMethod(javaClass);
+        if (actionMethodOpt.isPresent()) {
+            Action action = (Action) actionMethodOpt.get().getAnnotation(Action.class);
+            final List<CsInput> inputs = getInputs(actionMethodOpt.get());
             CsOperation operation = new CsOperation(
                     StringUtils.replace(toSnakeCase(action.name()), " ", "_"),
                     inputs,
                     getOutputs(action, inputs),
-                    getAction(gav, javaClass, actionMethod),
+                    getAction(gav, javaClass, actionMethodOpt.get()),
                     getResponses(action));
 
             return new CsOperationFile(javaClass.getPackageName(), operation, getOperationDescription(operation));
@@ -106,13 +108,17 @@ public class OperationService {
         return responseList;
     }
 
-    private static CtMethod getActionMethod(CtClass javaClass) {
-        for (CtMethod m : javaClass.getMethods()) {
-            if (m.hasAnnotation(Action.class)) {
-                return m;
+    private static Optional<CtMethod> getActionMethod(CtClass javaClass) {
+        try {
+            for (CtMethod m : javaClass.getMethods()) {
+                if (m.hasAnnotation(Action.class)) {
+                    return Optional.of(m);
+                }
             }
+        } catch (Exception e) {
+// todo a better filter            log.warn("found .... XYZ ...", e);
         }
-        return null;
+        return Optional.empty();
     }
 
     public static String getOperationDescription(CsOperation operation) {

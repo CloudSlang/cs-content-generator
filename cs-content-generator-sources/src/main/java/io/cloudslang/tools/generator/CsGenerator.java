@@ -18,7 +18,6 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -32,7 +31,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,71 +51,6 @@ public class CsGenerator {
         classPool.appendClassPath(new ClassClassPath(Response.class));
     }
 
-
-
-    private Path generateCloudSlangWrapper(final Template template, String gav, CtClass javaClass, Path destination) throws Exception {
-        CsOperationFile operation = OperationService.getOperation(gav, javaClass);
-        if (operation != null) {
-            Path result = destination.resolve(StringUtils.replace(operation.getNamespace(), ".", destination.getFileSystem().getSeparator()));
-            if (!Files.exists(result)) {
-                Files.createDirectories(result);
-            }
-            result = Paths.get(result.toString(), operation.getOperation().getName() + ".sl");
-            try (final Writer writer = Files.newBufferedWriter(result, StandardCharsets.UTF_8, StandardOpenOption.CREATE)) {
-                template.apply(operation.toMap(), writer);
-                writer.flush();
-            } catch (IOException e) {
-                log.error(ExceptionUtils.getStackTrace(e));
-            }
-
-            return result;
-        }
-        return null;
-    }
-
-    public void generateWrapper(String jarPath, String className, String destination) {
-        final Path destPath = Paths.get(destination);
-        try {
-            classPool.appendClassPath(jarPath);
-            String gav = MavenService.findArtifactGav(Paths.get(jarPath));
-
-            List<String> classes = selectActionClasses(jarPath, className);
-            final Optional<Template> optionalOperationTemplate = CsGenerator.loadTemplate("templates/CloudSlangOperation.hbs");
-            log.info("Template loaded");
-            optionalOperationTemplate.ifPresent(operationTemplate -> {
-            for (String cls : classes) {
-                try {
-                    // TODO collect failures in an object if necessary
-                    final CtClass ctClass = classPool.getCtClass(cls);
-                    final Path result = generateCloudSlangWrapper(operationTemplate, gav, ctClass, destPath);
-                    if (result != null) {
-                        log.info("Generated CloudSlang operation for class " + ctClass.getName() + " at " + result);
-                    }
-                } catch (Exception e) {
-                    log.error("Error occurred while generating CloudSlang for class " + cls + ":" + getStackTrace(e));
-                }
-            }
-            });
-            if (optionalOperationTemplate.isPresent()) {
-
-            }
-
-        } catch (Exception e) {
-            log.error("Error occurred while generating CloudSlang: " + getStackTrace(e));
-        }
-    }
-
-    private List<String> selectActionClasses(String jarPath, String className) throws IOException {
-        List<String> classes;
-        if (StringUtils.isEmpty(className)) {
-            classes = JarService.listClasses(Paths.get(jarPath));
-        } else {
-            classes = new ArrayList<>();
-            classes.add(className);
-        }
-        return classes;
-    }
-
     public static Optional<Template> loadTemplate(@NotNull final String pathToTemplate) {
         final TemplateLoader templateLoader = new FileTemplateLoader("", "");
         final Handlebars handlebars = new Handlebars(templateLoader).with(EscapingStrategy.NOOP);
@@ -132,5 +66,56 @@ public class CsGenerator {
     private static String getStringTemplate(@NotNull final String pathToTemplate) {
         final InputStream inputStream = ClassLoader.getSystemResourceAsStream(pathToTemplate);
         return IOUtils.toString(inputStream, UTF_8);
+    }
+
+    private Optional<Path> generateCloudSlangWrapper(final Template template, String gav, CtClass javaClass, Path destination) throws Exception {
+        CsOperationFile operation = OperationService.getOperation(gav, javaClass);
+        if (operation != null) {
+            Path result = destination.resolve(StringUtils.replace(operation.getNamespace(), ".", destination.getFileSystem().getSeparator()));
+            if (!Files.exists(result)) {
+                Files.createDirectories(result);
+            }
+            result = Paths.get(result.toString(), operation.getOperation().getName() + ".sl");
+            try (final Writer writer = Files.newBufferedWriter(result, StandardCharsets.UTF_8, StandardOpenOption.CREATE)) {
+                template.apply(operation.toMap(), writer);
+                writer.flush();
+            } catch (IOException e) {
+                log.error(ExceptionUtils.getStackTrace(e));
+            }
+
+            return Optional.of(result);
+        }
+        return Optional.empty();
+    }
+
+    public void generateWrapper(Path jarPath, String className, Path destPath) {
+        try {
+            classPool.appendClassPath(jarPath.toString());
+            String gav = MavenService.findArtifactGav(jarPath);
+
+            final List<String> classes = selectActionClasses(jarPath, className);
+            final Optional<Template> optionalOperationTemplate = CsGenerator.loadTemplate("templates/CloudSlangOperation.hbs");
+            log.info("Template loaded");
+            optionalOperationTemplate.ifPresent(operationTemplate ->
+                    classes.parallelStream()
+                            .forEach(cls -> {
+                                try {
+                                    final CtClass ctClass = classPool.getCtClass(cls);
+                                    final Optional<Path> optResult = generateCloudSlangWrapper(operationTemplate, gav, ctClass, destPath);
+                                    optResult.ifPresent(path -> log.info("Generated CloudSlang operation for class " + ctClass.getName() + " at " + path));
+                                } catch (Exception e) {
+                                    log.error("Error occurred while generating CloudSlang for class " + cls + ":" + getStackTrace(e));
+                                }
+                            }));
+        } catch (Exception e) {
+            log.error("Error occurred while generating CloudSlang: " + getStackTrace(e));
+        }
+    }
+
+    private List<String> selectActionClasses(Path jarPath, String className) throws IOException {
+        if (StringUtils.isEmpty(className)) {
+            return JarService.listClasses(jarPath);
+        }
+        return Collections.singletonList(className);
     }
 }

@@ -13,10 +13,11 @@ public class Main {
         public static void main(String[] args) {
             final Cli cliParser = new Cli(args);
             if (cliParser.parse()) {
-                final Path sourcePath = Paths.get(cliParser.getSource());
-                final Path destinationPath = Paths.get(cliParser.getDestination());
-                if (Files.exists(sourcePath) && StringUtils.isNotBlank(cliParser.getDestination())) {
-//                    CsGenerator(sourcePath, destinationPath);
+                final Path jarPath = Paths.get(cliParser.getSource());
+                final Path destination = Paths.get(cliParser.getDestination());
+                if (Files.exists(jarPath) && StringUtils.isNotBlank(cliParser.getDestination())) {
+                    CsGenerator csGenerator = new CsGenerator();
+                    csGenerator.generateWrapper(jarPath, "", destination);
                 }
             } else {
                 log.error("Please try again");
