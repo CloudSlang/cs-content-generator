@@ -38,7 +38,6 @@ public class CsOperation implements Mappable {
     @Override
     public Map<String, Object> toMap() {
         final Map<String, Object> operationMap = new HashMap<>();
-        inputs.stream().map(Mappable::toMap).collect(Collectors.toList());
         operationMap.put("name", name);
         operationMap.put("hasInputs", !inputs.isEmpty());
         operationMap.put("inputs", inputs.stream().map(CsInput::toMap).collect(Collectors.toList()));
