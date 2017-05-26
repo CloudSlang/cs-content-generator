@@ -1,9 +1,8 @@
-package io.cloudslang.tools.generator.services.fs;
+package io.cloudslang.tools.generator.services;
 
 import io.cloudslang.tools.generator.utils.PackageUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,20 +18,15 @@ import java.util.zip.ZipFile;
 import static org.apache.commons.io.FilenameUtils.getBaseName;
 import static org.apache.commons.io.FilenameUtils.getExtension;
 
-/**
- * Author: Ligia Centea
- * Date: 5/10/2016.
- */
-@Service
 public class JarService {
 
     private static final String JAR = "jar";
 
-    public boolean isJar(Path jar) {
+    public static boolean isJar(Path jar) {
         return JAR.equalsIgnoreCase(getExtension(jar.toString()));
     }
 
-    public Path extractJar(Path jar) throws IOException {
+    public static Path extractJar(Path jar) throws IOException {
         if (!isJar(jar)) {
             throw new IllegalArgumentException(String.format("%s is not a jar path", jar.toString()));
         }
@@ -53,7 +47,7 @@ public class JarService {
         return destination;
     }
 
-    public List<String> listClasses(Path jar) throws IOException {
+    public static List<String> listClasses(Path jar) throws IOException {
         if (!isJar(jar)) {
             throw new IllegalArgumentException(String.format("%s is not a jar path", jar.toString()));
         }
@@ -69,7 +63,7 @@ public class JarService {
         return entries;
     }
 
-    public InputStream getPomFromJar(Path jar) throws IOException {
+    public static InputStream getPomFromJar(Path jar) throws IOException {
         if (!isJar(jar)) {
             throw new IllegalArgumentException(String.format("%s is not a jar path", jar.toString()));
         }
