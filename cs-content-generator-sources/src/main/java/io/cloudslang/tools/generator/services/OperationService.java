@@ -3,13 +3,7 @@ package io.cloudslang.tools.generator.services;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import io.cloudslang.tools.generator.entities.CsInput;
-import io.cloudslang.tools.generator.entities.CsJavaAction;
-import io.cloudslang.tools.generator.entities.CsOperation;
-import io.cloudslang.tools.generator.entities.CsOperationFile;
-import io.cloudslang.tools.generator.entities.CsOutput;
-import io.cloudslang.tools.generator.entities.CsResponse;
+import io.cloudslang.tools.generator.entities.*;
 import io.cloudslang.tools.generator.services.converters.ResultExpressionConverterService;
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -99,18 +93,16 @@ public class OperationService {
     }
 
     private static List<CsResponse> getResponses(Action action) {
-        List<CsResponse> responseList = new ArrayList<>();
-        Response[] responses = action.responses();
-        for (Response r : responses) {
-            if (!r.isDefault()) {
-                String matchExpr = ResultExpressionConverterService.getMatchingExpression(r.matchType());
-                String rule = String.format("${" + matchExpr + "}", r.field(), r.value());
-                responseList.add(new CsResponse(getResultName(r.text()), rule));
-            } else {
-                responseList.add(new CsResponse(getResultName(r.text()), null));
-            }
-        }
-        return responseList;
+        return Arrays.stream(action.responses())
+                .map(r -> {
+                    final String responseName = getResultName(r.text());
+                    if (!r.isDefault()) {
+                        final String matchExpr = ResultExpressionConverterService.getMatchingExpression(r.matchType());
+                        final String rule = String.format("${" + matchExpr + "}", r.field(), r.value());
+                        return new CsResponse(responseName, rule);
+                    }
+                    return new CsResponse(responseName, null);
+                }).collect(Collectors.toList());
     }
 
     private static Optional<CtMethod> getActionMethod(CtClass javaClass) {

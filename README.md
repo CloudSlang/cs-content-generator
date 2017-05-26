@@ -31,10 +31,10 @@ To run the tool:
 
     java -jar cs-content-generator-<version>.jar -cs [-s <arg>] [-d <arg>]
 
-     -s,--src <arg>           The absolute path of the .jar file that contains @Actions for which CloudSlang operations 
+     -s, --source <arg>           The absolute path of the .jar file that contains @Actions for which CloudSlang operations 
                               will be generated.
-     -d,--destination <arg>   The absolute path of the CloudSlang sources.
-     -h,--help
+     -d, --destination <arg>   The absolute path of the CloudSlang sources.
+     -h, --help
    
    
 <a name="contribution-guideline"/>                                       
