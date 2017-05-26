@@ -18,7 +18,7 @@ public class CsResponse implements Mappable{
     public Map<String, Object> toMap() {
         final Map<String, Object> csResponseMap = new HashMap<>();
         csResponseMap.put("name", name);
-        csResponseMap.put("hasValue", StringUtils.isNoneEmpty(rule) || name.equalsIgnoreCase("FAILURE")); //at the moment FAILURE should not have an evaluator
+        csResponseMap.put("hasValue", StringUtils.isNoneEmpty(rule) && !name.equalsIgnoreCase("FAILURE")); //at the moment FAILURE should not have an evaluator
         csResponseMap.put("value", rule);
         return csResponseMap;
     }
