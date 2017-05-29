@@ -19,7 +19,7 @@ public class CsOperationFile implements Mappable{
 
     public Map<String, Object> toMap() {
         final Map<String, Object> csOperationFileMap = new HashMap<>(3);
-        csOperationFileMap.put("namespace", namespace);
+        csOperationFileMap.put("namespace", namespace.replace("actions.", ""));
         csOperationFileMap.put("documentation", description);
         csOperationFileMap.put("operation", operation.toMap());
         return csOperationFileMap;

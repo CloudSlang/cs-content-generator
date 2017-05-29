@@ -29,13 +29,38 @@ and generate the .sl files that will be added in [Cloudslang/cloud-slang-content
 
 To run the tool:
 
-    java -jar cs-content-generator-<version>.jar -cs [-s <arg>] [-d <arg>]
+#### Prerequisites
 
-     -s, --source <arg>           The absolute path of the .jar file that contains @Actions for which CloudSlang operations 
-                              will be generated.
-     -d, --destination <arg>   The absolute path of the CloudSlang sources.
-     -h, --help
+> Java 8 installed in order to run the tool.
+
+> [Maven 3.3.9](https://archive.apache.org/dist/maven/maven-3/3.3.9/binaries/) installed in order to build the tool. 
+
+1. Clone this repository and build it, by running (**mvn clean install**).
+   Copy 'cs-content-generator-\<version>.jar' to a folder of your choice.
+
+2. Download from [Maven Central](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.cloudslang.content%22) any of the packages 
+   available in [Cloudslang/cs-actions](https://github.com/CloudSlang/cs-actions) 
+   or clone the repository, build locally using Maven 3.3.9 and copy cs-packageName-0.0.*.jar to a location from which
+   it will be used as the --source argument. The path can be, either relative or absolute.
    
+   ```
+   Example:
+   > -s C:\Users\yourUsername\.m2\repository\io\cloudslang\content\cs-ssh-0.0.36\cs-ssh-0.0.36.jar
+   > -s cs-ssh-0.0.36.jar - If the package is in the same folder as the tool.
+   ```
+   
+3. Open command prompt in Windows or a terminal in Linux, go to the location where cs-content-generator-<version>.jar 
+   is located and run the following command:
+
+    ```
+    java -jar cs-content-generator-<version>.jar [-s <arg>] [-d <arg>]
+
+     -s, --source <arg>        The source file/folder of the Actions that will be converted.
+     -d, --destination <arg>   Absolute path to the location where the .sl files will be created.
+     -h, --help
+    ```
+
+4. Copy the newly created .sl files to your CloudSlang content folder or set -d **<path_to>\..\cloud-slang-content\content**.
    
 <a name="contribution-guideline"/>                                       
                                        

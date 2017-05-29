@@ -71,19 +71,19 @@ public class CsGenerator {
     private Optional<Path> generateCloudSlangWrapper(final Template template, String gav, CtClass javaClass, Path destination) throws Exception {
         CsOperationFile operation = OperationService.getOperation(gav, javaClass);
         if (operation != null) {
-            Path result = destination.resolve(StringUtils.replace(operation.getNamespace(), ".", destination.getFileSystem().getSeparator()));
+            final Path result = destination.resolve(StringUtils.replace(operation.getNamespace().replace("actions.", ""), ".", destination.getFileSystem().getSeparator()));
             if (!Files.exists(result)) {
                 Files.createDirectories(result);
             }
-            result = Paths.get(result.toString(), operation.getOperation().getName() + ".sl");
-            try (final Writer writer = Files.newBufferedWriter(result, StandardCharsets.UTF_8, StandardOpenOption.CREATE)) {
+            final Path resultCS = result.resolve(operation.getOperation().getName() + ".sl");
+            try (final Writer writer = Files.newBufferedWriter(resultCS, StandardCharsets.UTF_8, StandardOpenOption.CREATE)) {
                 template.apply(operation.toMap(), writer);
                 writer.flush();
             } catch (IOException e) {
                 log.error(ExceptionUtils.getStackTrace(e));
             }
 
-            return Optional.of(result);
+            return Optional.of(resultCS);
         }
         return Optional.empty();
     }
