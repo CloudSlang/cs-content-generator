@@ -29,7 +29,7 @@ and generate the .sl files that will be added in [Cloudslang/cloud-slang-content
 
 To run the tool:
 
-#### Prerequisites
+#### PREREQUISITES
 
 > Java 8 installed in order to run the tool.
 
@@ -68,7 +68,3 @@ To run the tool:
                                        
 Read our Contribution Guide [here](CONTRIBUTING.md).                                       
                               
-                              
-
-
-

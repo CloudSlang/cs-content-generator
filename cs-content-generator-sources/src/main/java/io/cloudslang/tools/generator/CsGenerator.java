@@ -71,7 +71,7 @@ public class CsGenerator {
     private Optional<Path> generateCloudSlangWrapper(final Template template, String gav, CtClass javaClass, Path destination) throws Exception {
         CsOperationFile operation = OperationService.getOperation(gav, javaClass);
         if (operation != null) {
-            final Path result = destination.resolve(StringUtils.replace(operation.getNamespace().replace("actions.", ""), ".", destination.getFileSystem().getSeparator()));
+            final Path result = destination.resolve(StringUtils.replace(operation.getNamespace(), ".", destination.getFileSystem().getSeparator()));
             if (!Files.exists(result)) {
                 Files.createDirectories(result);
             }

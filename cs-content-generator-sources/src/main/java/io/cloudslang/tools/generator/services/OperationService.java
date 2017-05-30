@@ -27,6 +27,9 @@ import static java.lang.System.lineSeparator;
 public class OperationService {
 
     private static final List<String> SESSION_OBJECTS = Arrays.asList("GlobalSessionObject", "SerializableSessionObject");
+    private static final String CONTENT = ".content.";
+    private static final String ACTIONS = ".actions.";
+    private static final String DOT = ".";
 
     public static CsOperationFile getOperation(String gav, @NotNull CtClass javaClass) throws ClassNotFoundException, NotFoundException, BadAttributeValueExpException {
         Optional<CtMethod> actionMethodOpt = getActionMethod(javaClass);
@@ -40,7 +43,10 @@ public class OperationService {
                     getAction(gav, javaClass, actionMethodOpt.get()),
                     getResponses(action));
 
-            return new CsOperationFile(javaClass.getPackageName(), operation, getOperationDescription(operation));
+            final String namespace = javaClass.getPackageName()
+                    .replace(CONTENT, DOT)
+                    .replace(ACTIONS, DOT);
+            return new CsOperationFile(namespace, operation, getOperationDescription(operation));
         }
         return null;
     }
@@ -118,7 +124,7 @@ public class OperationService {
         return Optional.empty();
     }
 
-    public static String getOperationDescription(CsOperation operation) {
+    private static String getOperationDescription(CsOperation operation) {
 
         final String inputsDescription = operation.getInputs().stream()
                 .filter(csInput -> !csInput.isPrivateField())
