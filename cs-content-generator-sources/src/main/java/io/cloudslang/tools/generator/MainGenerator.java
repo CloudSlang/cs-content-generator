@@ -4,9 +4,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class MainGenerator {
-    public static final Path jarPath = Paths.get("c:\\users\\moldovso\\desktop\\testGenerator\\cs-amazon-1.0.10-SNAPSHOT.jar");
+    public static final Path jarPath = Paths.get(System.getProperty("user.home") + "\\Desktop\\source\\cs-amazon-1.0.10-SNAPSHOT.jar");
     public static final String className = "";
-    public static final Path destination = Paths.get("c:\\users\\moldovso\\cloudslang\\cloud-slang-content/content/io/cloudslang/amazon");
+    public static final Path destination = Paths.get(System.getProperty("user.home") + "\\cloudslang\\cloud-slang-content\\content");
 
     public static void main(String[] args) {
         CsGenerator csGenerator = new CsGenerator();

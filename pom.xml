@@ -2,7 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>io.cloudslang.tools</groupId>
     <artifactId>cs-content-generator</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -54,7 +56,6 @@
                 <artifactId>lombok</artifactId>
                 <version>1.16.16</version>
             </dependency>
-
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
@@ -122,4 +123,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
