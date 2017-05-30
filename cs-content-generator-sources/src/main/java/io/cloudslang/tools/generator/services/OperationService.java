@@ -124,7 +124,7 @@ public class OperationService {
         return Optional.empty();
     }
 
-    private static String getOperationDescription(CsOperation operation) {
+    public static String getOperationDescription(CsOperation operation) {
 
         final String inputsDescription = operation.getInputs().stream()
                 .filter(csInput -> !csInput.isPrivateField())
