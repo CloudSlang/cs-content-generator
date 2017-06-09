@@ -1,8 +1,11 @@
 package io.cloudslang.tools.generator.entities;
 
+import lombok.Data;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Data
 public class CsJavaAction implements Mappable {
 
     private final String gav;

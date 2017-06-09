@@ -118,9 +118,7 @@ public class OperationService {
                     return Optional.of(m);
                 }
             }
-        } catch (Exception e) {
-// todo a better filter            log.warn("found .... XYZ ...", e);
-        }
+        } catch (Exception ignored) {}
         return Optional.empty();
     }
 

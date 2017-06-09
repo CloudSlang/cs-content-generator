@@ -33,7 +33,9 @@ public class CsOperation implements Mappable {
     public List<CsResponse> getResults() {
         return results;
     }
-
+    public CsJavaAction getAction() {
+        return action;
+    }
 
     @Override
     public Map<String, Object> toMap() {
