@@ -14,6 +14,7 @@ import io.cloudslang.tools.generator.entities.CsOperationFile;
 import io.cloudslang.tools.generator.services.JarService;
 import io.cloudslang.tools.generator.services.MavenService;
 import io.cloudslang.tools.generator.services.OperationService;
+import io.cloudslang.tools.generator.utils.YamlUtils;
 import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -34,7 +35,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -43,6 +43,8 @@ import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;
 @Slf4j
 public class CsGenerator {
 
+    public static final String OPERATION_JAVA_ACTION_GAV = "operation.java_action.gav";
+    public static final String DELIMITER = ".";
     private final ClassPool classPool;
 
     public CsGenerator() {
@@ -113,48 +115,29 @@ public class CsGenerator {
             final YamlReader reader = new YamlReader(new FileReader(slFile.toString()));
             final Object parsed = reader.read();
 
-            final Object oldGavObj = simpleYPath(parsed, "operation.java_action.gav", ".");
-            final String oldGav = oldGavObj.toString();
+            final Optional<Object> oldGavOpt = YamlUtils.simpleYPath(parsed, OPERATION_JAVA_ACTION_GAV, DELIMITER);
 
-            final String newGav = operation.getOperation().getAction().getGav();
+            if (oldGavOpt.isPresent()) {
+                final String oldGav = (String) oldGavOpt.get();
 
-            if (oldGav.equalsIgnoreCase(newGav)) {
-                return Optional.empty();
-            } else {
-                final String slFileContent = FileUtils.readFileToString(slFile.toFile(), UTF_8);
+                final String newGav = operation.getOperation().getAction().getGav();
 
-                final String updatedContent = StringUtils.replace(slFileContent, oldGav, operation.getOperation().getAction().getGav());
+                if (!oldGav.equalsIgnoreCase(newGav)) {
+                    final String slFileContent = FileUtils.readFileToString(slFile.toFile(), UTF_8);
 
-                FileUtils.write(slFile.toFile(), updatedContent, UTF_8);
+                    final String updatedContent = StringUtils.replace(slFileContent, oldGav, operation.getOperation().getAction().getGav());
 
-                return Optional.of(slFile);
+                    FileUtils.write(slFile.toFile(), updatedContent, UTF_8);
+
+                    return Optional.of(slFile);
+                }
             }
         } catch (IOException e) {
-            log.error("Nothing to see here, move along", e);
+            log.error("Unable to open file.", e);
         }
         return Optional.empty();
     }
 
-    private Object simpleYPath(final Object object, final String yPath, final String delimiter) {
-        if (StringUtils.isNotEmpty(yPath)) {
-            if (object instanceof Map) {
-                final Map map = (Map) object;
-                final String whatWeSearchFor = StringUtils.substringBefore(yPath, delimiter);
-
-                final Object something = map.get(whatWeSearchFor);
-
-                if (something != null) {
-                    return simpleYPath(something, StringUtils.substringAfter(yPath, delimiter), delimiter);
-                } else {
-                    throw new RuntimeException("Could not find the object you're searching for. Is it love ? Baby don't hertz me. No Morse");
-                }
-            } else {
-                throw new RuntimeException("Could not find the object you're searching for. Is it love ? Baby don't hertz me. No Morse - Part 2");
-            }
-        } else {
-            return object;
-        }
-    }
 
     public void generateWrapper(Path jarPath, String className, Path destPath) {
         try {
