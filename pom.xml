@@ -13,6 +13,7 @@
     <modules>
         <module>cs-content-generator-cli</module>
         <module>cs-content-generator-sources</module>
+        <module>cs-content-generator-plugin</module>
     </modules>
 
     <properties>
