@@ -8,12 +8,14 @@ import java.util.stream.Collectors;
 public class CsOperation implements Mappable {
 
     private String name;
+    private String description;
     private List<CsInput> inputs;
     private List<CsOutput> outputs;
     private CsJavaAction action;
     private List<CsResponse> results;
 
-    public CsOperation(String name, List<CsInput> inputs, List<CsOutput> outputs, CsJavaAction action, List<CsResponse> results) {
+    public CsOperation(String description, String name, List<CsInput> inputs, List<CsOutput> outputs, CsJavaAction action, List<CsResponse> results) {
+        this.description = description;
         this.name = name;
         this.inputs = inputs;
         this.outputs = outputs;
@@ -21,6 +23,9 @@ public class CsOperation implements Mappable {
         this.results = results;
     }
 
+    public String getDescription() {
+        return description;
+    }
     public String getName() {
         return name;
     }
@@ -33,11 +38,14 @@ public class CsOperation implements Mappable {
     public List<CsResponse> getResults() {
         return results;
     }
-
+    public CsJavaAction getAction() {
+        return action;
+    }
 
     @Override
     public Map<String, Object> toMap() {
         final Map<String, Object> operationMap = new HashMap<>();
+        operationMap.put("description", description);
         operationMap.put("name", name);
         operationMap.put("hasInputs", !inputs.isEmpty());
         operationMap.put("inputs", inputs.stream().map(CsInput::toMap).collect(Collectors.toList()));

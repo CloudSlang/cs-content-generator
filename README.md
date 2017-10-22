@@ -10,7 +10,7 @@ CloudSlang Content Generator
 [![Build Status](https://travis-ci.org/CloudSlang/cs-content-generator.svg?branch=master)](https://travis-ci.org/CloudSlang/cs-content-generator)
 
 
-This repository contains a tool that generates CloudSlang .sl files based on Java Actions.
+This repository contains a tool that generates / updates CloudSlang .sl files based on Java Actions.
 
 1. [Description](#description)
 2. [General Usage](#general-usage)
@@ -20,8 +20,8 @@ This repository contains a tool that generates CloudSlang .sl files based on Jav
 
 ## Description
 
-This tool will offer the possibility to generate Java Actions from the project [Cloudslang/cs-actions](https://github.com/CloudSlang/cs-actions)
-and generate the .sl files that will be added in [Cloudslang/cloud-slang-content](https://github.com/CloudSlang/cloud-slang-content)
+This tool will offer the possibility to convert Java Actions from the project [Cloudslang/cs-actions](https://github.com/CloudSlang/cs-actions)
+and generate/update the .sl files that will be added in [Cloudslang/cloud-slang-content](https://github.com/CloudSlang/cloud-slang-content)
 
 <a name="general-usage"/>
 
@@ -45,22 +45,28 @@ To run the tool:
    
    ```
    Example:
-   > -s C:\Users\yourUsername\.m2\repository\io\cloudslang\content\cs-ssh-0.0.36\cs-ssh-0.0.36.jar
-   > -s cs-ssh-0.0.36.jar - If the package is in the same folder as the tool.
+   -s C:\Users\yourUsername\.m2\repository\io\cloudslang\content\cs-ssh-0.0.36\cs-ssh-0.0.36.jar
+   -s cs-ssh-0.0.36.jar - If the package is in the same folder as the tool.
+   
+   -d C:\Users\yourUsername\cloudslang\cloud-slang-content\content
+   -d content - If the folder is in the same location as the tool.
    ```
    
 3. Open command prompt in Windows or a terminal in Linux, go to the location where cs-content-generator-<version>.jar 
    is located and run the following command:
 
     ```
-    java -jar cs-content-generator-<version>.jar [-s <arg>] [-d <arg>]
+    java -jar cs-content-generator-<version>.jar -s javaPackage -d folderName 
 
-     -s, --source <arg>        The source file/folder of the Actions that will be converted.
-     -d, --destination <arg>   Absolute path to the location where the .sl files will be created.
+     -s, --source       The source file/folder of the Actions that will be converted.
+     -d, --destination  Absolute path to the location where the .sl files will be created.
      -h, --help
     ```
 
 4. Copy the newly created .sl files to your CloudSlang content folder or set -d **<path_to>\..\cloud-slang-content\content**.
+
+> Note: If the files already exist, they will be updated with the new values.
+        At the moment, only the gav: section is updated. 
    
 <a name="contribution-guideline"/>                                       
                                        

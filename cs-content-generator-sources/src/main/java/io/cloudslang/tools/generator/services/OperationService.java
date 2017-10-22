@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 import static io.cloudslang.tools.generator.utils.NameUtils.getResultName;
 import static io.cloudslang.tools.generator.utils.NameUtils.toSnakeCase;
 import static java.lang.System.lineSeparator;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 
 @Slf4j
 public class OperationService {
@@ -30,13 +32,16 @@ public class OperationService {
     private static final String CONTENT = ".content.";
     private static final String ACTIONS = ".actions.";
     private static final String DOT = ".";
+    public static final String COMMENT_CHAR = "#!";
 
     public static CsOperationFile getOperation(String gav, @NotNull CtClass javaClass) throws ClassNotFoundException, NotFoundException, BadAttributeValueExpException {
         Optional<CtMethod> actionMethodOpt = getActionMethod(javaClass);
         if (actionMethodOpt.isPresent()) {
             Action action = (Action) actionMethodOpt.get().getAnnotation(Action.class);
             final List<CsInput> inputs = getInputs(actionMethodOpt.get());
+            final String description = defaultIfEmpty(action.description(), "Generated description.");
             CsOperation operation = new CsOperation(
+                    description,
                     StringUtils.replace(toSnakeCase(action.name()), " ", "_"),
                     inputs,
                     getOutputs(action, inputs),
@@ -53,7 +58,6 @@ public class OperationService {
 
     private static CsJavaAction getAction(String gav, CtClass javaClass, CtMethod actionMethod) {
         return new CsJavaAction(gav, javaClass.getName(), actionMethod.getName()); //todo this is wrong, should be checked
-//        return new CsJavaAction(gav, actionMethod.getName(), javaClass.getName());
     }
 
     private static List<CsInput> getInputs(CtMethod actionMethod) throws ClassNotFoundException, NotFoundException, BadAttributeValueExpException {
@@ -71,9 +75,10 @@ public class OperationService {
                     if (annotation instanceof Param) {
                         Param param = (Param) annotation;
                         String name = toSnakeCase(param.value());
-                        inputs.add(new CsInput(name, param.required(), null, param.encrypted(), false));
+                        String description = param.description();
+                        inputs.add(new CsInput(name, description, param.required(), null, param.encrypted(), false));
                         if (!name.equals(param.value())) {
-                            inputs.add(new CsInput(param.value(), false, String.format("${get(\'%s\', \'\')}", name), param.encrypted(), true));
+                            inputs.add(new CsInput(param.value(), description, false, String.format("${get(\'%s\', \'\')}", name), param.encrypted(), true));
                         }
                     }
                 }
@@ -88,12 +93,13 @@ public class OperationService {
         for (Output o : outputs) {
             String outputName = toSnakeCase(o.value());
             final String outputNameCopy = outputName;
+            final String description = o.description();
             boolean hasInputWithSameName = inputs.stream().anyMatch(i -> i.getName().equals(outputNameCopy));
             if (hasInputWithSameName) {
                 outputName += "_output";
             }
             String expression = String.format("${%s}", o.value());
-            outputsList.add(new CsOutput(outputName, expression));
+            outputsList.add(new CsOutput(outputName, description, expression));
         }
         return outputsList;
     }
@@ -102,12 +108,13 @@ public class OperationService {
         return Arrays.stream(action.responses())
                 .map(r -> {
                     final String responseName = getResultName(r.text());
+                    final String description = r.description();
                     if (!r.isDefault()) {
                         final String matchExpr = ResultExpressionConverterService.getMatchingExpression(r.matchType());
                         final String rule = String.format("${" + matchExpr + "}", r.field(), r.value());
-                        return new CsResponse(responseName, rule);
+                        return new CsResponse(responseName, description, rule);
                     }
-                    return new CsResponse(responseName, null);
+                    return new CsResponse(responseName, description,null);
                 }).collect(Collectors.toList());
     }
 
@@ -118,8 +125,7 @@ public class OperationService {
                     return Optional.of(m);
                 }
             }
-        } catch (Exception e) {
-// todo a better filter            log.warn("found .... XYZ ...", e);
+        } catch (Exception ignored) {
         }
         return Optional.empty();
     }
@@ -129,15 +135,17 @@ public class OperationService {
         final String inputsDescription = operation.getInputs().stream()
                 .filter(csInput -> !csInput.isPrivateField())
                 .map(csInput -> {
-                    final StringBuilder isInput = new StringBuilder(String.format("#! @input %s: ", csInput.getName()));
+                    final StringBuilder isInput = new StringBuilder(String.format("%s @input %s: ", COMMENT_CHAR, csInput.getName()));
 
-                    final int indent = isInput.toString().length() - 2;
+                    final int indent = isInput.toString().length() - COMMENT_CHAR.length();
 
-                    isInput.append("Generated description.");
+
+                        isInput.append(defaultIfEmpty(csInput.getDescription(), "Generated description."));
+
 
                     if (!csInput.isRequired()) {
                         isInput.append(lineSeparator())
-                                .append("#!")
+                                .append(COMMENT_CHAR)
                                 .append(StringUtils.repeat(" ", indent))
                                 .append("Optional");
                     }
@@ -146,20 +154,20 @@ public class OperationService {
                 .collect(Collectors.joining(lineSeparator()));
 
         final String outputsDescription = operation.getOutputs().stream()
-                .map(csOutput -> String.format("#! @output %s: Generated description.", csOutput.getName()))
+                .map(csOutput -> String.format("%s @output %s: %s", COMMENT_CHAR, csOutput.getName(), defaultIfEmpty(csOutput.getDescription(), "Generated description.")))
                 .collect(Collectors.joining(lineSeparator()));
 
         final String responsesDescription = operation.getResults().stream()
-                .map(csResponse -> String.format("#! @result %s: Generated description.", csResponse.getName()))
+                .map(csResponse -> String.format("%s @result %s: %s", COMMENT_CHAR, csResponse.getName(), defaultIfEmpty(csResponse.getDescription(), "Generated description.")))
                 .collect(Collectors.joining(lineSeparator()));
 
         return new StringBuilder(inputsDescription)
                 .append(lineSeparator())
-                .append("#!")
+                .append(COMMENT_CHAR)
                 .append(lineSeparator())
                 .append(outputsDescription)
                 .append(lineSeparator())
-                .append("#!")
+                .append(COMMENT_CHAR)
                 .append(lineSeparator())
                 .append(responsesDescription)
                 .toString();

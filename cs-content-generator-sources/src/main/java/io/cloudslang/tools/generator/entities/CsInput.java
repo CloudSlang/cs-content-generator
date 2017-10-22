@@ -8,13 +8,15 @@ import java.util.Map;
 public class CsInput implements Mappable {
 
     private final String name;
+    private final String description;
     private final boolean required;
     private final String defaultValue;
     private final boolean privateField;
     private final boolean sensitive;
 
-    public CsInput(String name, boolean required, String defaultValue, boolean sensitive, boolean overridable) {
+    public CsInput(String name, String description, boolean required, String defaultValue, boolean sensitive, boolean overridable) {
         this.name = name;
+        this.description = description;
         this.required = required;
         this.defaultValue = StringUtils.defaultIfEmpty(defaultValue, "");
         this.sensitive = sensitive;
@@ -25,6 +27,7 @@ public class CsInput implements Mappable {
         boolean hasDefault = StringUtils.isNotEmpty(defaultValue);
         final Map<String, Object> csInputMap = new HashMap<>();
         csInputMap.put("name", name);
+        csInputMap.put("description", description);
         csInputMap.put("default", defaultValue);
         csInputMap.put("hasAny", hasDefault || !required || sensitive);
         csInputMap.put("hasDefault", hasDefault);
@@ -35,6 +38,7 @@ public class CsInput implements Mappable {
 
     }
 
+    public String getDescription() { return description; }
     public String getName() {
         return name;
     }
