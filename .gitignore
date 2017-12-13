@@ -1,6 +1,5 @@
 target/
 output/
-build/cli/
 *.class
 *.log
 .idea/
@@ -10,3 +9,4 @@ build/cli/
 .project
 .classpath
 *.history
+cs-content-generator-cli/dependency-reduced-pom.xml
