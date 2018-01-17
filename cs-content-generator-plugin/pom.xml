@@ -76,7 +76,7 @@
                 <artifactId>maven-plugin-plugin</artifactId>
                 <version>3.4</version>
                 <configuration>
-                    <goalPrefix>generate</goalPrefix>
+                    <goalPrefix>cs-content-generator</goalPrefix>
                 </configuration>
                 <executions>
                     <execution>
