@@ -23,30 +23,30 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-import java.nio.file.Path;
+import java.io.File;
 
 @Mojo(name = "generate",
         defaultPhase = LifecyclePhase.PACKAGE)
 
 public class Generate extends AbstractMojo {
 
-    @Parameter(property = "jarPath", required = true)
-    protected Path jarPath;
+    @Parameter(property = "jarFile", required = true)
+    protected File jarFile;
 
     @Parameter(property = "className")
     protected String className;
 
     @Parameter(property = "destination", required = true)
-    protected Path destination;
+    protected File destination;
 
     public void execute() throws MojoExecutionException {
 
         try {
             CsGenerator csGenerator = new CsGenerator();
-            csGenerator.generateWrapper(jarPath, className, destination);
-            getLog().info("Generating content for Java Package" + jarPath.getFileName());
+            csGenerator.generateWrapper(jarFile.toPath(), className, destination.toPath());
+            getLog().info("Generating content for Java Package" + jarFile.getName());
         } catch (Exception e) {
-            throw new MojoExecutionException("Error creating content for Java Package" + jarPath.getFileName(), e);
+            throw new MojoExecutionException("Error creating content for Java Package" + jarFile.getName(), e);
         }
 
 }
