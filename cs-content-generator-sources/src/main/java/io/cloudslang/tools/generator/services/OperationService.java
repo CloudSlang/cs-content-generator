@@ -181,7 +181,7 @@ public class OperationService {
                 .collect(joining(NEW_LINE));
 
         final String responsesDescription = operation.getResults().stream()
-                .map(csResponse -> ImmutablePair.of(csResponse.getDescription(), format("%s @response %s: ", COMMENT_CHAR, csResponse.getName())))
+                .map(csResponse -> ImmutablePair.of(csResponse.getDescription(), format("%s @result %s: ", COMMENT_CHAR, csResponse.getName())))
                 .map(pair -> pair.getRight() + wrapAndIndent(pair.getLeft(), pair.getRight().length()))
                 .collect(joining(NEW_LINE));
 
