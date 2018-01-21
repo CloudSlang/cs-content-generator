@@ -46,10 +46,10 @@ To run the tool:
    ```
    Example:
    -s C:\Users\yourUsername\.m2\repository\io\cloudslang\content\cs-ssh-0.0.36\cs-ssh-0.0.36.jar
-   -s cs-ssh-0.0.36.jar - If the package is in the same folder as the tool.
+   -s cs-ssh-0.0.38.jar - If the package is in the same folder as the tool.
    
    -d C:\Users\yourUsername\cloudslang\cloud-slang-content\content
-   -d content - If the folder is in the same location as the tool.
+   -d content - If you want to save the generated content in the same folder as the tool.
    ```
    
 3. Open command prompt in Windows or a terminal in Linux, go to the location where cs-content-generator-<version>.jar 
@@ -66,7 +66,22 @@ To run the tool:
 4. Copy the newly created .sl files to your CloudSlang content folder or set -d **<path_to>\..\cloud-slang-content\content**.
 
 > Note: If the files already exist, they will be updated with the new values.
-        At the moment, only the gav: section is updated. 
+        At the moment, only the gav: section is updated.
+        
+NEW: This tool can also be added as another step in a Maven build to generate content.
+
+Maven plugin example:
+```
+    [...]
+      <plugins>
+        <plugin>
+                <groupId>io.cloudslang.tools</groupId>
+                <artifactId>cs-content-generator</artifactId>
+                <version>${version}</version>
+        </plugin>
+      </plugins>
+    [...]
+``` 
    
 <a name="contribution-guideline"/>                                       
                                        
