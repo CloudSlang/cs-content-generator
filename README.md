@@ -14,7 +14,7 @@ This repository contains a tool that generates / updates CloudSlang .sl files ba
 
 1. [Description](#description)
 2. [General Usage](#general-usage)
-3. [Contribution Guideline](contribution-guideline)
+3. [Contribution Guideline](#contribution-guideline)
 
 <a name="description"/>
 
@@ -68,20 +68,33 @@ To run the tool:
 > Note: If the files already exist, they will be updated with the new values.
         At the moment, only the gav: section is updated.
         
-NEW: This tool can also be added as another step in a Maven build to generate content.
+NEW: cs-content-generator-plugin 
+
+This plugin can also be added as another step in a Maven build to generate content.
 
 Maven plugin example:
 ```
     [...]
       <plugins>
-        <plugin>
+            <plugin>
                 <groupId>io.cloudslang.tools</groupId>
-                <artifactId>cs-content-generator</artifactId>
+                <artifactId>cs-content-generator-plugin</artifactId>
                 <version>${version}</version>
-        </plugin>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
       </plugins>
     [...]
 ``` 
+
+The plugin can run independent from the build: 'mvn package' which will generate the .sl files as long as there is a 
+.jar in the ${project.build.directory} of the project.
    
 <a name="contribution-guideline"/>                                       
                                        

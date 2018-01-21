@@ -35,7 +35,7 @@ public class Generate extends AbstractMojo {
     @Parameter(property = "className")
     protected String className;
 
-    @Parameter(property = "destination", defaultValue = "${project.build.directory}/classes/io/cloudslang/content")
+    @Parameter(property = "destination", defaultValue = "${project.build.directory}/generated-slang/io/cloudslang/content")
     protected File destination;
 
     public void execute() throws MojoExecutionException {
