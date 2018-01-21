@@ -83,7 +83,7 @@ public class CsGenerator {
 
     @SneakyThrows
     private static String getStringTemplate(@NotNull final String pathToTemplate) {
-        final InputStream inputStream = ClassLoader.getSystemResourceAsStream(pathToTemplate);
+        final InputStream inputStream = CsGenerator.class.getResourceAsStream(pathToTemplate);
         return IOUtils.toString(inputStream, UTF_8);
     }
 
@@ -160,7 +160,7 @@ public class CsGenerator {
             String gav = MavenService.findArtifactGav(jarPath);
 
             final List<String> classes = selectActionClasses(jarPath, className);
-            final Optional<Template> optionalOperationTemplate = CsGenerator.loadTemplate("templates/CloudSlangOperation.hbs");
+            final Optional<Template> optionalOperationTemplate = CsGenerator.loadTemplate("/templates/CloudSlangOperation.hbs");
             log.info("Template loaded");
             optionalOperationTemplate.ifPresent(operationTemplate ->
                     classes.parallelStream()
