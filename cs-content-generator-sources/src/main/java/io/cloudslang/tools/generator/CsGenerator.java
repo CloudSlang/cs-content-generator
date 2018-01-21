@@ -1,11 +1,10 @@
 /*
- * Copyright © 2017 EntIT Software LLC, a Micro Focus company (L.P.)
+ * (c) Copyright 2017 Micro Focus, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -84,7 +83,7 @@ public class CsGenerator {
 
     @SneakyThrows
     private static String getStringTemplate(@NotNull final String pathToTemplate) {
-        final InputStream inputStream = ClassLoader.getSystemResourceAsStream(pathToTemplate);
+        final InputStream inputStream = CsGenerator.class.getResourceAsStream(pathToTemplate);
         return IOUtils.toString(inputStream, UTF_8);
     }
 
@@ -161,7 +160,7 @@ public class CsGenerator {
             String gav = MavenService.findArtifactGav(jarPath);
 
             final List<String> classes = selectActionClasses(jarPath, className);
-            final Optional<Template> optionalOperationTemplate = CsGenerator.loadTemplate("templates/CloudSlangOperation.hbs");
+            final Optional<Template> optionalOperationTemplate = CsGenerator.loadTemplate("/templates/CloudSlangOperation.hbs");
             log.info("Template loaded");
             optionalOperationTemplate.ifPresent(operationTemplate ->
                     classes.parallelStream()

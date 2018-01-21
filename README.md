@@ -14,7 +14,7 @@ This repository contains a tool that generates / updates CloudSlang .sl files ba
 
 1. [Description](#description)
 2. [General Usage](#general-usage)
-3. [Contribution Guideline](contribution-guideline)
+3. [Contribution Guideline](#contribution-guideline)
 
 <a name="description"/>
 
@@ -46,10 +46,10 @@ To run the tool:
    ```
    Example:
    -s C:\Users\yourUsername\.m2\repository\io\cloudslang\content\cs-ssh-0.0.36\cs-ssh-0.0.36.jar
-   -s cs-ssh-0.0.36.jar - If the package is in the same folder as the tool.
+   -s cs-ssh-0.0.38.jar - If the package is in the same folder as the tool.
    
    -d C:\Users\yourUsername\cloudslang\cloud-slang-content\content
-   -d content - If the folder is in the same location as the tool.
+   -d content - If you want to save the generated content in the same folder as the tool.
    ```
    
 3. Open command prompt in Windows or a terminal in Linux, go to the location where cs-content-generator-<version>.jar 
@@ -66,7 +66,35 @@ To run the tool:
 4. Copy the newly created .sl files to your CloudSlang content folder or set -d **<path_to>\..\cloud-slang-content\content**.
 
 > Note: If the files already exist, they will be updated with the new values.
-        At the moment, only the gav: section is updated. 
+        At the moment, only the gav: section is updated.
+        
+NEW: cs-content-generator-plugin 
+
+This plugin can also be added as another step in a Maven build to generate content.
+
+Maven plugin example:
+```
+    [...]
+      <plugins>
+            <plugin>
+                <groupId>io.cloudslang.tools</groupId>
+                <artifactId>cs-content-generator-plugin</artifactId>
+                <version>${version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+      </plugins>
+    [...]
+``` 
+
+The plugin can run independent from the build: 'mvn package' which will generate the .sl files as long as there is a 
+.jar in the ${project.build.directory} of the project.
    
 <a name="contribution-guideline"/>                                       
                                        
