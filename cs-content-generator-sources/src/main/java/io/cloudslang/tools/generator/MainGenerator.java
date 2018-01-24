@@ -19,9 +19,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class MainGenerator {
-    public static final Path jarPath = Paths.get(System.getProperty("user.home") + "\\Desktop\\cs-azure-0.0.6-SNAPSHOT.jar");
+    public static final Path jarPath = Paths.get(System.getProperty("user.home") + "\\Desktop\\cs-content-gen\\cs-dca-1.0.0-SNAPSHOT.jar");
     public static final String className = "";
-    public static final Path destination = Paths.get(System.getProperty("user.home") + "\\Desktop\\potato");
+    public static final Path destination = Paths.get(System.getProperty("user.home") + "\\Desktop\\cs-content-gen\\potato");
 
     public static void main(String[] args) {
         CsGenerator csGenerator = new CsGenerator();

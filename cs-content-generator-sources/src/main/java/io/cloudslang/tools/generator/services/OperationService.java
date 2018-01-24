@@ -16,7 +16,6 @@
 package io.cloudslang.tools.generator.services;
 
 import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import io.cloudslang.tools.generator.entities.*;
 import io.cloudslang.tools.generator.services.converters.ResultExpressionConverterService;
@@ -24,7 +23,6 @@ import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,30 +38,33 @@ import static io.cloudslang.tools.generator.utils.NameUtils.toSnakeCase;
 import static java.lang.String.format;
 import static java.lang.System.lineSeparator;
 import static java.util.stream.Collectors.joining;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static org.apache.commons.lang3.StringUtils.repeat;
-import static org.apache.commons.lang3.StringUtils.replace;
+import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.commons.lang3.text.WordUtils.wrap;
 
 @Slf4j
 public class OperationService {
 
+    public static final String COMMENT_CHAR = "#!";
+    public static final int MAX_LINE_LENGTH = 120;
+    public static final String NEW_LINE = lineSeparator();
+    public static final String DESCRIPTION_PREFIX = "#! @description: ";
     private static final List<String> SESSION_OBJECTS = Arrays.asList("GlobalSessionObject", "SerializableSessionObject");
     private static final String CONTENT = ".content.";
     private static final String ACTIONS = ".actions.";
     private static final String DOT = ".";
-    public static final String COMMENT_CHAR = "#!";
-    public static final int MAX_LINE_LENGTH = 120;
-    public static final String NEW_LINE = lineSeparator();
 
     public static CsOperationFile getOperation(String gav, @NotNull CtClass javaClass) throws ClassNotFoundException, NotFoundException, BadAttributeValueExpException {
         Optional<CtMethod> actionMethodOpt = getActionMethod(javaClass);
         if (actionMethodOpt.isPresent()) {
             Action action = (Action) actionMethodOpt.get().getAnnotation(Action.class);
             final List<CsInput> inputs = getInputs(actionMethodOpt.get());
+
+            final StringBuilder descriptionBuilder = new StringBuilder(DESCRIPTION_PREFIX);
             final String description = defaultIfEmpty(action.description(), "Generated description.");
+            descriptionBuilder.append(wrapAndIndent(description, DESCRIPTION_PREFIX.length()));
+
             CsOperation operation = new CsOperation(
-                    description,
+                    descriptionBuilder.toString(),
                     replace(toSnakeCase(action.name()), " ", "_"),
                     inputs,
                     getOutputs(action, inputs),
@@ -100,7 +101,7 @@ public class OperationService {
                         String description = param.description();
                         inputs.add(new CsInput(name, description, param.required(), null, param.encrypted(), false));
                         if (!name.equals(param.value())) {
-                            inputs.add(new CsInput(param.value(), description, false, format("${get(\'%s\', \'\')}", name), param.encrypted(), true));
+                            inputs.add(new CsInput(param.value(), description, false, format("${get('%s', '')}", name), param.encrypted(), true));
                         }
                     }
                 }
@@ -110,20 +111,16 @@ public class OperationService {
     }
 
     private static List<CsOutput> getOutputs(Action action, List<CsInput> inputs) {
-        List<CsOutput> outputsList = new ArrayList<>();
-        Output[] outputs = action.outputs();
-        for (Output o : outputs) {
-            String outputName = toSnakeCase(o.value());
-            final String outputNameCopy = outputName;
-            final String description = o.description();
-            boolean hasInputWithSameName = inputs.stream().anyMatch(i -> i.getName().equals(outputNameCopy));
-            if (hasInputWithSameName) {
-                outputName += "_output";
-            }
-            String expression = format("${%s}", o.value());
-            outputsList.add(new CsOutput(outputName, description, expression));
-        }
-        return outputsList;
+        return Arrays.stream(action.outputs())
+                .map(o -> {
+                    final StringBuilder outputName = new StringBuilder(toSnakeCase(o.value()));
+                    boolean hasInputWithSameName = inputs.stream().anyMatch(i -> i.getName().equals(outputName.toString()));
+                    if (hasInputWithSameName) {
+                        outputName.append("_output");
+                    }
+                    final String expression = format("${get('%s', '')}", o.value());
+                    return new CsOutput(outputName.toString(), o.description(), expression);
+                }).collect(Collectors.toList());
     }
 
     private static List<CsResponse> getResponses(Action action) {
