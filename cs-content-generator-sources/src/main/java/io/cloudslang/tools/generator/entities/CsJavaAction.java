@@ -27,12 +27,6 @@ public class CsJavaAction implements Mappable {
     private final String methodName;
     private final String className;
 
-    public CsJavaAction(String gav, String methodName, String className) {
-        this.gav = gav;
-        this.className = methodName;
-        this.methodName = className;
-    }
-
     public Map<String, Object> toMap() {
         final Map<String, Object> javaActionMap = new HashMap<>();
         javaActionMap.put("gav", gav);
