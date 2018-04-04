@@ -24,8 +24,8 @@ import java.util.Map;
 public class CsJavaAction implements Mappable {
 
     private final String gav;
-    private final String methodName;
     private final String className;
+    private final String methodName;
 
     public Map<String, Object> toMap() {
         final Map<String, Object> javaActionMap = new HashMap<>();
