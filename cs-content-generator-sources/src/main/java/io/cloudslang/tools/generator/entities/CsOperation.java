@@ -15,14 +15,12 @@
 
 package io.cloudslang.tools.generator.entities;
 
-import lombok.Data;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Data
 public class CsOperation implements Mappable {
 
     private final String name;
@@ -32,11 +30,39 @@ public class CsOperation implements Mappable {
     private final CsJavaAction action;
     private final List<CsResponse> results;
 
+    public CsOperation(String description, String name, List<CsInput> inputs, List<CsOutput> outputs, CsJavaAction action, List<CsResponse> results) {
+        this.name = name;
+        this.description = description;
+        this.inputs = inputs;
+        this.outputs = outputs;
+        this.action = action;
+        this.results = results;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+    public String getName() {
+        return name;
+    }
+    public List<CsInput> getInputs() {
+        return inputs;
+    }
+    public List<CsOutput> getOutputs() {
+        return outputs;
+    }
+    public List<CsResponse> getResults() {
+        return results;
+    }
+    public CsJavaAction getAction() {
+        return action;
+    }
+
     @Override
     public Map<String, Object> toMap() {
         final Map<String, Object> operationMap = new HashMap<>();
-        operationMap.put("description", description);
         operationMap.put("name", name);
+        operationMap.put("description", description);
         operationMap.put("hasInputs", !inputs.isEmpty());
         operationMap.put("inputs", inputs.stream().map(CsInput::toMap).collect(Collectors.toList()));
         operationMap.put("hasOutputs", !outputs.isEmpty());

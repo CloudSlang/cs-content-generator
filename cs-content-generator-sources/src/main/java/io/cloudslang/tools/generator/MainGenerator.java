@@ -19,7 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class MainGenerator {
-    public static final Path jarPath = Paths.get(System.getProperty("user.home") + "\\Desktop\\cs-azure-0.0.6-SNAPSHOT.jar");
+    public static final Path jarPath = Paths.get(System.getProperty("user.home") + "\\cloudslang\\cs-actions\\cs-http-client\\target\\cs-http-client-0.1.74-SNAPSHOT.jar");
     public static final String className = "";
     public static final Path destination = Paths.get(System.getProperty("user.home") + "\\Desktop\\potato");
 
