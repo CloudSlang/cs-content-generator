@@ -120,7 +120,7 @@ public class OperationService {
             if (hasInputWithSameName) {
                 outputName += "_output";
             }
-            String expression = format("${%s}", o.value());
+            String expression = "${get(\'" + o.value() + "\', \'\')}";
             outputsList.add(new CsOutput(outputName, description, expression));
         }
         return outputsList;

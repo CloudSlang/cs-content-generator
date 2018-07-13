@@ -35,8 +35,8 @@ public class CsOperationFile implements Mappable{
     public Map<String, Object> toMap() {
         final Map<String, Object> csOperationFileMap = new HashMap<>(3);
         csOperationFileMap.put("namespace", namespace);
-        csOperationFileMap.put("documentation", description);
         csOperationFileMap.put("operation", operation.toMap());
+        csOperationFileMap.put("documentation", description);
         return csOperationFileMap;
     }
 
