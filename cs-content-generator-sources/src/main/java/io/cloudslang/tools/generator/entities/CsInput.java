@@ -15,11 +15,13 @@
 
 package io.cloudslang.tools.generator.entities;
 
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Data
 public class CsInput implements Mappable {
 
     private final String name;
@@ -51,22 +53,6 @@ public class CsInput implements Mappable {
         csInputMap.put("isSensitive", sensitive);
         return csInputMap;
 
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean isRequired() {
-        return required;
-    }
-
-    public boolean isPrivateField() {
-        return privateField;
     }
 
 }

@@ -15,12 +15,14 @@
 
 package io.cloudslang.tools.generator.entities;
 
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CsOutput  implements Mappable{
+@Data
+public class CsOutput implements Mappable {
 
     private final String name;
     private final String description;
@@ -41,12 +43,5 @@ public class CsOutput  implements Mappable{
         return csOutputMap;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
 
 }

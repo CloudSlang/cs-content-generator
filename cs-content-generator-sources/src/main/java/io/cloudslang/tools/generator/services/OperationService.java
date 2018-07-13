@@ -24,7 +24,6 @@ import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,31 +39,34 @@ import static io.cloudslang.tools.generator.utils.NameUtils.toSnakeCase;
 import static java.lang.String.format;
 import static java.lang.System.lineSeparator;
 import static java.util.stream.Collectors.joining;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static org.apache.commons.lang3.StringUtils.repeat;
-import static org.apache.commons.lang3.StringUtils.replace;
+import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.commons.lang3.text.WordUtils.wrap;
 
 @Slf4j
 public class OperationService {
 
+    public static final String COMMENT_CHAR = "#!";
+    public static final int MAX_LINE_LENGTH = 120;
+    public static final String NEW_LINE = lineSeparator();
+    public static final String GENERATED_DESCRIPTION = "Generated description.";
     private static final List<String> SESSION_OBJECTS = Arrays.asList("GlobalSessionObject", "SerializableSessionObject");
     private static final String CONTENT = ".content.";
     private static final String ACTIONS = ".actions.";
     private static final String DOT = ".";
-    public static final String COMMENT_CHAR = "#!";
-    public static final int MAX_LINE_LENGTH = 120;
-    public static final String NEW_LINE = lineSeparator();
 
     public static CsOperationFile getOperation(String gav, @NotNull CtClass javaClass) throws ClassNotFoundException, NotFoundException, BadAttributeValueExpException {
         Optional<CtMethod> actionMethodOpt = getActionMethod(javaClass);
         if (actionMethodOpt.isPresent()) {
             Action action = (Action) actionMethodOpt.get().getAnnotation(Action.class);
             final List<CsInput> inputs = getInputs(actionMethodOpt.get());
-            final String description = defaultIfEmpty(action.description(), "Generated description.");
+
+            final String descriptionBefore = COMMENT_CHAR + " @description: ";
+            final String wrappedDesc = wrapAndIndent(defaultIfEmpty(action.description(), GENERATED_DESCRIPTION), descriptionBefore.length());
+            final String description = descriptionBefore + wrappedDesc;
+
             CsOperation operation = new CsOperation(
-                    description,
                     replace(toSnakeCase(action.name()), " ", "_"),
+                    description,
                     inputs,
                     getOutputs(action, inputs),
                     getAction(gav, javaClass, actionMethodOpt.get()),
@@ -130,7 +132,7 @@ public class OperationService {
         return Arrays.stream(action.responses())
                 .map(r -> {
                     final String responseName = getResultName(r.text());
-                    final String description = r.description();
+                    final String description = defaultIfEmpty(r.description(), GENERATED_DESCRIPTION);
                     if (!r.isDefault()) {
                         final String matchExpr = ResultExpressionConverterService.getMatchingExpression(r.matchType());
                         final String rule = format("${" + matchExpr + "}", r.field(), r.value());

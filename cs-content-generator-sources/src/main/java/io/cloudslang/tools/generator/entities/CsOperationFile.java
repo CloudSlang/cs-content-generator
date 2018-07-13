@@ -15,11 +15,13 @@
 
 package io.cloudslang.tools.generator.entities;
 
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Data
 public class CsOperationFile implements Mappable{
     
     private String namespace;
@@ -40,11 +42,5 @@ public class CsOperationFile implements Mappable{
         return csOperationFileMap;
     }
 
-    public String getNamespace() {
-        return namespace;
-    }
-    public CsOperation getOperation() {
-        return operation;
-    }
 
 }
